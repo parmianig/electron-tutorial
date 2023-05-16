@@ -1,14 +1,26 @@
-const {app, BrowserWindow} = require("electron")
+const {app, BrowserWindow, ipcMain} = require("electron")
+const path = require('path');
 
+let mainWindow
 const createWindow = () => {
-    const win = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 800,
-        height: 600
+        height: 600,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            preload: path.join(__dirname, 'preload.js')
+        }
     })
 
-    win.loadFile("index.html")
+    mainWindow.loadFile("index.html")
 }
 
 app.whenReady().then(() => {
     createWindow()
+})
+
+ipcMain.on('close-app', (e ,data) => {
+    console.log(data)
+    mainWindow.webContents.send('risposta', {nome: 'marco', cognome: 'bianchi'})
 })
