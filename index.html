@@ -9,19 +9,24 @@
 </head>
 
 <body>
-    <h1>Rocketron App</h1>
+    <h1>Webp Converter</h1>
     <button id="button">Invia</button>
+    <div id="output">
+        <h2 id="message"></h2>
+    </div>
 
     <script>
         const {ipcRenderer } = require('electron')
 
         const button = document.getElementById('button')
-        button.addEventListener('click', () => {
-            ipcRenderer.send('close-app', {nome: 'luca', cognome: 'rossi'});
-            console.log(ipcRenderer.on('risposta', (e, data) => {
-                console.log(data)
-                })
-            );
+        button.addEventListener('click', () => convertImage());
+
+        function convertImage () {
+            ipcRenderer.send('image:convert')
+        }
+
+        ipcRenderer.on('image:convert', ()=> {
+            document.getElementById('message').innerText = "Image successfully converted!"
         })
     </script>
 </body>

@@ -1,5 +1,8 @@
-const {app, BrowserWindow, ipcMain} = require("electron")
+const { app, BrowserWindow, ipcMain } = require("electron")
+const fs = require('fs')
 const path = require('path');
+const webp = require('webp-converter');
+webp.grant_permission();
 
 let mainWindow
 const createWindow = () => {
@@ -19,8 +22,37 @@ const createWindow = () => {
 app.whenReady().then(() => {
     createWindow()
 })
+const resourcesPath = path.resolve('resources');
+ipcMain.on('image:convert', () => {
+    const nonWebPFiles = fs
+        .readdirSync(resourcesPath)
+        .filter(file => !file.endsWith('.webp'));
 
-ipcMain.on('close-app', (e ,data) => {
-    console.log(data)
-    mainWindow.webContents.send('risposta', {nome: 'marco', cognome: 'bianchi'})
+    nonWebPFiles.forEach(file => {
+        const absolutePath = path.resolve(resourcesPath, file);
+        fs.stat(absolutePath, (err, stats) => {
+            if (err) {
+                throw err;
+            }
+
+            if (stats.isDirectory()) {
+                return;
+            }
+
+            const fileNameWithoutExtension = path.parse(absolutePath).name;
+            const result = webp.cwebp(
+                absolutePath,
+                `${path.join(resourcesPath, fileNameWithoutExtension)}.webp`,
+                "-q 80",
+                logging = "-v"
+            );
+
+            result.then((response) => {
+                console.log(response);
+                mainWindow.webContents.send('image:convert');
+            });
+        });
+    });
+
+
 })
