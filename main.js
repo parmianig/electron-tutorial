@@ -21,7 +21,6 @@ const createWindow = () => {
             frame: false,
             x: externalDisplay.bounds.x + 50,
             y: externalDisplay.bounds.y + 50,
-            transparent: true,
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false,
