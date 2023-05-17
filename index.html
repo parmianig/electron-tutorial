@@ -25,28 +25,6 @@
 </head>
 
 <body>
-    <div class="menu">
-        <button id="minimize" title="minimize" class="menu-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
-            </svg>
-        </button>
-        <button id="maximize" title="maximize" class="menu-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M3 8.25V18a2.25 2.25 0 002.25 2.25h13.5A2.25 2.25 0 0021 18V8.25m-18 0V6a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 6v2.25m-18 0h18M5.25 6h.008v.008H5.25V6zM7.5 6h.008v.008H7.5V6zm2.25 0h.008v.008H9.75V6z" />
-            </svg>
-        </button>
-
-        <button id="close" title="close" class="menu-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </button>
-    </div>
     <h1>RocketMan</h1>
     <button id="button">Invia</button>
     <div id="output">
@@ -55,31 +33,6 @@
 
     <script>
         const { ipcRenderer } = require('electron')
-
-        const button = document.getElementById('button')
-        button.addEventListener('click', () => convertImage());
-
-        const minimizeBtn = document.getElementById('minimize')
-        const maximizeBtn = document.getElementById('maximize')
-        const closeBtn = document.getElementById('close')
-
-        minimizeBtn.addEventListener('click', () => {
-            ipcRenderer.send('window:minimize')
-        })
-        maximizeBtn.addEventListener('click', () => {
-            ipcRenderer.send('window:maximize')
-        })
-        closeBtn.addEventListener('click', () => {
-            ipcRenderer.send('window:close')
-        })
-
-        function convertImage() {
-            ipcRenderer.send('image:convert')
-        }
-
-        ipcRenderer.on('image:convert', () => {
-            document.getElementById('message').innerText = "Image successfully converted!"
-        })
     </script>
 </body>
 
