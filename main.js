@@ -25,7 +25,7 @@ const setMainMenu = () => {
             label: 'File',
             submenu: [
                 isMac ? { role: 'close' } : { role: 'quit' },
-                {label: 'triggerMenuEvent', click: triggerMenuEvent}
+                {label: 'triggerMenuEvent', click: triggerMenuEvent, accelerator: 'Ctrl+Cmd+I'}
             ]
         },
         // { role: 'editMenu' }
