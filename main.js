@@ -24,7 +24,8 @@ const setMainMenu = () => {
         {
             label: 'File',
             submenu: [
-                isMac ? { role: 'close' } : { role: 'quit' }
+                isMac ? { role: 'close' } : { role: 'quit' },
+                {label: 'triggerMenuEvent', click: triggerMenuEvent}
             ]
         },
         // { role: 'editMenu' }
@@ -133,3 +134,7 @@ app.whenReady().then(() => {
     createWindow()
     setMainMenu()
 })
+
+function triggerMenuEvent() {
+    mainWindow.webContents.send('menuEvent')
+}

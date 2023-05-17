@@ -33,6 +33,10 @@
 
     <script>
         const { ipcRenderer } = require('electron')
+
+        ipcRenderer.on('menuEvent', () => {
+            console.log("menu event received")
+        });
     </script>
 </body>
 
