@@ -37,6 +37,11 @@
         ipcRenderer.on('menuEvent', () => {
             console.log("menu event received")
         });
+
+        ipcRenderer.on('disableEvent', () => {
+            console.log("disable event received")
+        });
+
     </script>
 </body>
 

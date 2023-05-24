@@ -25,7 +25,8 @@ const setMainMenu = () => {
             label: 'File',
             submenu: [
                 isMac ? { role: 'close' } : { role: 'quit' },
-                { label: 'triggerMenuEvent', click: triggerMenuEvent, accelerator: 'Ctrl+Cmd+I' }
+                { label: 'triggerMenuEvent', click: triggerMenuEvent, accelerator: 'Ctrl+Cmd+I' },
+                { label: 'triggerDisableMenu', click: triggerDisableMenu, accelerator: 'Ctrl+Cmd+D', id: 'disable' }
             ]
         },
         // { role: 'editMenu' }
@@ -135,12 +136,18 @@ app.whenReady().then(() => {
 })
 
 function triggerMenuEvent() {
-    // mainWindow.webContents.send('menuEvent')
-    menu.append(new MenuItem({
+    mainWindow.webContents.send('menuEvent')
+    Menu.getApplicationMenu().insert(0, new MenuItem({
         label: 'add',
         submenu: [
             { label: 'add now' },
             { label: 'add after' }
         ]
     }))
+}
+
+function triggerDisableMenu() {
+    mainWindow.webContents.send('disableEvent')
+    Menu.getApplicationMenu()
+        .getMenuItemById("disable").visible = false
 }
