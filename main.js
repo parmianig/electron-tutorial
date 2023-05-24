@@ -25,7 +25,7 @@ const setMainMenu = () => {
             label: 'File',
             submenu: [
                 isMac ? { role: 'close' } : { role: 'quit' },
-                {label: 'triggerMenuEvent', click: triggerMenuEvent, accelerator: 'Ctrl+Cmd+I'}
+                { label: 'triggerMenuEvent', click: triggerMenuEvent, accelerator: 'Ctrl+Cmd+I' }
             ]
         },
         // { role: 'editMenu' }
@@ -102,8 +102,7 @@ const setMainMenu = () => {
         }
     ]
 
-    const menu = Menu.buildFromTemplate(template)
-    Menu.setApplicationMenu(menu)
+    return Menu.buildFromTemplate(template)
 }
 
 let mainWindow
@@ -132,9 +131,16 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
     createWindow()
-    setMainMenu()
+    Menu.setApplicationMenu(setMainMenu())
 })
 
 function triggerMenuEvent() {
-    mainWindow.webContents.send('menuEvent')
+    // mainWindow.webContents.send('menuEvent')
+    menu.append(new MenuItem({
+        label: 'add',
+        submenu: [
+            { label: 'add now' },
+            { label: 'add after' }
+        ]
+    }))
 }
