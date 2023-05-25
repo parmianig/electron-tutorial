@@ -2,6 +2,9 @@ const electron = require("electron");
 const { app, BrowserWindow, ipcMain, Menu, MenuItem } = require("electron")
 const path = require('path');
 
+let mainWindow
+let secondWindow
+
 const setMainMenu = () => {
     const isMac = process.platform === 'darwin'
     const template = [
@@ -26,7 +29,8 @@ const setMainMenu = () => {
             submenu: [
                 isMac ? { role: 'close' } : { role: 'quit' },
                 { label: 'triggerMenuEvent', click: triggerMenuEvent, accelerator: 'Ctrl+Cmd+I' },
-                { label: 'triggerDisableMenu', click: triggerDisableMenu, accelerator: 'Ctrl+Cmd+D', id: 'disable' }
+                { label: 'triggerDisableMenu', click: triggerDisableMenu, accelerator: 'Ctrl+Cmd+D', id: 'disable' },
+                { label: 'second window', click: secondWindowEvent, accelerator: 'Ctrl+Cmd+S', id: 'secondWindow' }
             ]
         },
         // { role: 'editMenu' }
@@ -106,7 +110,7 @@ const setMainMenu = () => {
     return Menu.buildFromTemplate(template)
 }
 
-let mainWindow
+
 const createWindow = () => {
     let displays = electron.screen.getAllDisplays()
     let externalDisplay = displays.find((display) => {
@@ -128,11 +132,20 @@ const createWindow = () => {
     }
 
     mainWindow.loadFile("index.html")
+    mainWindow.on('closed', () => app.quit())
 }
 
 app.whenReady().then(() => {
     createWindow()
     Menu.setApplicationMenu(setMainMenu())
+}).catch((err) => {
+    console.log(err);
+});
+
+ipcMain.on('secondWindow', () => {
+    secondWindow.close()
+    secondWindow = null
+    mainWindow.webContents.send('parentWindow')
 })
 
 function triggerMenuEvent() {
@@ -149,5 +162,23 @@ function triggerMenuEvent() {
 function triggerDisableMenu() {
     mainWindow.webContents.send('disableEvent')
     Menu.getApplicationMenu()
-        .getMenuItemById("disable").visible = false
+    .getMenuItemById("disable").visible = false
+}
+
+function secondWindowEvent() {
+    secondWindow = new BrowserWindow({
+        modal: true,
+        parent: mainWindow,
+        width: 400,
+        height: 600,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            preload: path.join(__dirname, 'preload.js')
+        }
+    })
+
+    secondWindow.loadFile("form.html").catch((err) => {
+        console.log(err);
+    });
 }
